@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Darshankumar Savsani | Portfolio</title>
+  
+  <!-- Three.js CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      scroll-behavior: smooth;
+    }
+    body {
+      background-color: #08080c;
+      color: #f3f4f6;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      overflow-x: hidden;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+    #canvas-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 1;
+      pointer-events: none;
+    }
+    .wrapper {
+      position: relative;
+      z-index: 10;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 2rem;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 0;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .brand {
+      font-weight: 800;
+      letter-spacing: 0.15em;
+      font-size: 1.25rem;
+      background: linear-gradient(135deg, #38bdf8, #818cf8);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-decoration: none;
+    }
+    .nav-links {
+      display: flex;
+      gap: 1.2rem;
+      font-size: 0.85rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      flex-wrap: wrap;
+    }
+    .nav-links a {
+      color: #9ca3af;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover {
+      color: #38bdf8;
+    }
+    .hero {
+      margin: 5rem 0 3rem;
+      max-width: 750px;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.35rem 1rem;
+      background: rgba(56, 189, 248, 0.1);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      color: #38bdf8;
+      margin-bottom: 1.5rem;
+      font-family: monospace;
+    }
+    .badge-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #38bdf8;
+      box-shadow: 0 0 8px #38bdf8;
+    }
+    h1 {
+      font-size: clamp(2.3rem, 5vw, 3.8rem);
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      margin-bottom: 1.5rem;
+    }
+    h1 span {
+      background: linear-gradient(135deg, #fff, #9ca3af);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    p.description {
+      font-size: 1.05rem;
+      color: #9ca3af;
+      line-height: 1.6;
+      margin-bottom: 2rem;
+    }
+    .cta-container {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .btn {
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.5rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+    .btn-primary {
+      background: #38bdf8;
+      color: #08080c;
+      border: none;
+      box-shadow: 0 0 20px rgba(56, 189, 248, 0.3);
+    }
+    .btn-primary:hover {
+      background: #7dd3fc;
+      transform: translateY(-2px);
+    }
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.05);
+      color: #fff;
+      border: 1px solid #27272a;
+      -webkit-backdrop-filter: blur(8px);
+      backdrop-filter: blur(8px);
+    }
+    .btn-secondary:hover {
+      border-color: #38bdf8;
+      transform: translateY(-2px);
+    }
+    .btn-whatsapp {
+      background: #22c55e;
+      color: #ffffff;
+      border: none;
+      box-shadow: 0 0 20px rgba(34, 197, 94, 0.3);
+    }
+    .btn-whatsapp:hover {
+      background: #16a34a;
+      transform: translateY(-2px);
+    }
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.5rem;
+      margin: 3rem 0;
+    }
+    .card {
+      background: rgba(18, 18, 24, 0.6);
+      border: 1px solid #27272a;
+      padding: 1.5rem;
+      border-radius: 0.75rem;
+      -webkit-backdrop-filter: blur(10px);
+      backdrop-filter: blur(10px);
+      transition: transform 0.2s, border-color 0.2s;
+      text-decoration: none;
+      display: block;
+    }
+    .card:hover {
+      transform: translateY(-4px);
+      border-color: #38bdf8;
+    }
+    .card h3 {
+      font-size: 1.1rem;
+      margin-bottom: 0.5rem;
+      color: #f3f4f6;
+    }
+    .card p {
+      font-size: 0.85rem;
+      color: #9ca3af;
+      line-height: 1.5;
+    }
+    /* Contact Section Styling */
+    .contact-section {
+      margin: 4rem 0 2rem;
+      padding: 2rem;
+      background: rgba(18, 18, 24, 0.4);
+      border: 1px solid #27272a;
+      border-radius: 1rem;
+      -webkit-backdrop-filter: blur(10px);
+      backdrop-filter: blur(10px);
+    }
+    .contact-header {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: #f3f4f6;
+    }
+    .contact-sub {
+      color: #9ca3af;
+      font-size: 0.9rem;
+      margin-bottom: 1.5rem;
+    }
+    .contact-methods {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    footer {
+      border-top: 1px solid #1f2937;
+      padding: 1.5rem 0;
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      color: #6b7280;
+      font-family: monospace;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    footer a {
+      color: #6b7280;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    footer a:hover {
+      color: #38bdf8;
+    }
+  </style>
+</head>
+<body>
+
+  <canvas id="canvas-bg"></canvas>
+
+  <div class="wrapper">
+    <header>
+      <a href="https://github.com/1darshankumarsavsani-blip" target="_blank" rel="noopener noreferrer" class="brand">DARSHAN.DEV</a>
+      <nav class="nav-links">
+        <a href="https://github.com/1darshankumarsavsani-blip?tab=repositories" target="_blank" rel="noopener noreferrer">Repositories</a>
+        <a href="https://github.com/1darshankumarsavsani-blip?tab=projects" target="_blank" rel="noopener noreferrer">Projects</a>
+        <a href="https://github.com/1darshankumarsavsani-blip?tab=stars" target="_blank" rel="noopener noreferrer">Stars</a>
+        <a href="https://github.com/1darshankumarsavsani-blip?tab=followers" target="_blank" rel="noopener noreferrer">Followers</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </header>
+
+    <section class="hero">
+      <div class="badge">
+        <span class="badge-dot"></span> Available for Projects
+      </div>
+      <h1>Building Scalable <span>Software & Web Solutions</span></h1>
+      <p class="description">
+        Passionate Computer Engineering student crafting high-performance applications, interactive 3D web experiences, and robust architectures.
+      </p>
+      <div class="cta-container">
+        <a href="https://github.com/1darshankumarsavsani-blip?tab=repositories" target="_blank" rel="noopener noreferrer" class="btn btn-primary">Browse Repositories</a>
+        <a href="https://wa.me/918799615978" target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp">💬 WhatsApp Chat</a>
+        <a href="mailto:1darshankumarsavsani@gmail.com" class="btn btn-secondary">✉️ Direct Email</a>
+      </div>
+    </section>
+
+    <section class="skills-grid">
+      <a href="https://github.com/1darshankumarsavsani-blip?tab=repositories" target="_blank" rel="noopener noreferrer" class="card">
+        <h3>Java Engineering ↗</h3>
+        <p>Object-Oriented Programming, Swing Desktop Apps, and core computational logic.</p>
+      </a>
+      <a href="https://github.com/1darshankumarsavsani-blip?tab=repositories" target="_blank" rel="noopener noreferrer" class="card">
+        <h3>Modern Web Development ↗</h3>
+        <p>Interactive 3D graphics with Three.js, responsive layouts, and modern UI engineering.</p>
+      </a>
+      <a href="https://github.com/1darshankumarsavsani-blip?tab=repositories" target="_blank" rel="noopener noreferrer" class="card">
+        <h3>Clean Architecture ↗</h3>
+        <p>Modular software structures, relational databases, and version management using Git.</p>
+      </a>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact-section" id="contact">
+      <h2 class="contact-header">Let's Connect</h2>
+      <p class="contact-sub">Have an interesting project or want to collaborate? Feel free to reach out directly.</p>
+      <div class="contact-methods">
+        <a href="mailto:1darshankumarsavsani@gmail.com" class="btn btn-primary">✉️ 1darshankumarsavsani@gmail.com</a>
+        <a href="tel:+918799615978" class="btn btn-secondary">📞 +91 87996 15978</a>
+        <a href="https://wa.me/918799615978" target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp">💬 WhatsApp</a>
+        <a href="https://github.com/1darshankumarsavsani-blip" target="_blank" rel="noopener noreferrer" class="btn btn-secondary">GitHub Profile ↗</a>
+      </div>
+    </section>
+
+    <footer>
+      <span>© 2026 <a href="https://github.com/1darshankumarsavsani-blip" target="_blank" rel="noopener noreferrer">Savsani Darshankumar</a></span>
+      <span>Hosted on <a href="https://github.com/1darshankumarsavsani-blip" target="_blank" rel="noopener noreferrer">GitHub Pages</a></span>
+    </footer>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('canvas-bg');
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+    // Interactive 3D Particles
+    const particlesCount = 700;
+    const geometry = new THREE.BufferGeometry();
+    const positions = new Float32Array(particlesCount * 3);
+
+    for (let i = 0; i < particlesCount * 3; i++) {
+      positions[i] = (Math.random() - 0.5) * 15;
+    }
+
+    geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+
+    const material = new THREE.PointsMaterial({
+      size: 0.04,
+      color: 0x38bdf8,
+      transparent: true,
+      opacity: 0.7
+    });
+
+    const particles = new THREE.Points(geometry, material);
+    scene.add(particles);
+
+    // Subtle 3D Geometric Ring
+    const torusGeo = new THREE.TorusGeometry(3, 0.02, 16, 100);
+    const torusMat = new THREE.MeshBasicMaterial({ color: 0x818cf8, wireframe: true, transparent: true, opacity: 0.25 });
+    const torus = new THREE.Mesh(torusGeo, torusMat);
+    scene.add(torus);
+
+    camera.position.z = 5;
+
+    // Mouse Interaction
+    let mouseX = 0;
+    let mouseY = 0;
+
+    window.addEventListener('mousemove', (e) => {
+      mouseX = (e.clientX / window.innerWidth) - 0.5;
+      mouseY = (e.clientY / window.innerHeight) - 0.5;
+    });
+
+    // Resize Handler
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+
+    // Animation Loop
+    function animate() {
+      requestAnimationFrame(animate);
+
+      particles.rotation.y += 0.001;
+      particles.rotation.x += 0.0005;
+
+      torus.rotation.x += 0.002;
+      torus.rotation.y += 0.003;
+
+      camera.position.x += (mouseX * 2 - camera.position.x) * 0.05;
+      camera.position.y += (-mouseY * 2 - camera.position.y) * 0.05;
+
+      renderer.render(scene, camera);
+    }
+    animate();
+  </script>
+</body>
+</html>
